@@ -92,8 +92,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
       }
     });
     jQuery(document).ready(function($){
-      $(document).bind('mousewheel', function(e){
-        if(e.wheelDelta/120 > 0) {
+      $(document).on('mousewheel', function(e){
+        if(e.originalEvent.wheelDelta/120 > 0) {
           camera.position.z -= .07;
         }
         else{
