@@ -7,6 +7,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
     var sun;
     
     var anim = true;
+
+    var titanic;
     
     
     var array;
@@ -44,11 +46,13 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         fragmentShader: document.getElementById( 'fragmentShader' ).textContent
         
       } );
-      //console.log(material.uniforms);
-      var sphere = new THREE.Mesh( new THREE.SphereGeometry( 1,50,50 ),  material );
-      scene.add( sphere );
       
-      
+      var jsonLoader = new THREE.JSONLoader();
+      jsonLoader.load( "titanic.js", function ( geometry, materials ) {
+        var material = new THREE.MeshFaceMaterial( materials );
+        titanic = new THREE.Mesh( geometry, material );
+        scene.add( titanic );
+      });
       
       renderer = new THREE.WebGLRenderer( { antialias: true } );
       renderer.setSize( window.innerWidth, window.innerHeight );
