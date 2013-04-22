@@ -1,2 +1,2 @@
-require './underwater'
+require './dev-server'
 run Sinatra::Application
