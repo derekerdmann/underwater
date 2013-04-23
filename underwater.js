@@ -23,10 +23,10 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
       document.body.appendChild( container );
       
       camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.001, 1000);
-      camera.position.set( 0, 0, 99 );
+      camera.position.set( 0, 20, 99 );
 
       scene = new THREE.Scene();
-      sun = new THREE.DirectionalLight( 0xffffff);
+      sun = new THREE.DirectionalLight(0xffffff);
       sun.position.set(2,2,2);
       scene.add( sun );
       
@@ -51,6 +51,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
       jsonLoader.load( "titanic.js", function ( geometry, materials ) {
         var material = new THREE.MeshFaceMaterial( materials );
         titanic = new THREE.Mesh( geometry, material );
+        titanic.rotation.y = -Math.PI / 2;
         scene.add( titanic );
       });
       
