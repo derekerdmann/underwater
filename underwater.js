@@ -23,7 +23,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
       document.body.appendChild( container );
       
       camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.001, 1000);
-      camera.position.set( 0, 0, 3 );
+      camera.position.set( 0, 0, 99 );
 
       scene = new THREE.Scene();
       sun = new THREE.DirectionalLight( 0xffffff);
@@ -67,19 +67,19 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
       {
         case 87://w
           //mesh.rotation.x -= .02;
-          camera.position.y += .05;
+          camera.position.y += .5;
           break;
         case 65://a
-          //mesh.rotation.y -= .02;
-          camera.position.x -= .05;
+          titanic.rotation.y -= .02;
+          //camera.position.x -= .05;
           break;
         case 83://s
           //mesh.rotation.x += .02;
-          camera.position.y -= .05;
+          camera.position.y -= .5;
           break;
         case 68://d
-          //mesh.rotation.y += .02;
-          camera.position.x += .05;
+          titanic.rotation.y += .02;
+          //camera.position.x += .05;
           break;
         case 73://d
           camera.position.z -= .07;
