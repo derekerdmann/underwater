@@ -3,7 +3,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
     var container;
 
     var camera, scene, renderer;
-    var uniforms, material;
+    var uniforms, underWaterMaterial;
     var sun;
     
     var anim = true;
@@ -40,7 +40,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
       };
       
-      material = new THREE.ShaderMaterial( {
+      underWaterMaterial = new THREE.ShaderMaterial( {
         uniforms: uniforms,
         vertexShader: document.getElementById( 'vertexShader' ).textContent,
         fragmentShader: document.getElementById( 'fragmentShader' ).textContent
@@ -50,7 +50,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
       var jsonLoader = new THREE.JSONLoader();
       jsonLoader.load( "titanic.js", function ( geometry, materials ) {
         var material = new THREE.MeshFaceMaterial( materials );
-        titanic = new THREE.Mesh( geometry, material );
+        titanic = new THREE.Mesh( geometry, underWaterMaterial );
         titanic.rotation.y = -Math.PI / 2;
         scene.add( titanic );
       });
