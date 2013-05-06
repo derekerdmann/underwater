@@ -82,3 +82,9 @@ FirstPersonCamera.prototype.onMouseMove = function(event) {
 
   
 }
+
+
+/* Clears all current translations */
+FirstPersonCamera.prototype.resetTranslation = function(event) {
+  event.data.that.translation = []
+};

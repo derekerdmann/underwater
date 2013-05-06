@@ -65,6 +65,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
     $(document).bind("keydown", { that: camera }, camera.onKeyDown);
     $(document).bind("keyup", { that: camera }, camera.onKeyUp);
     $(document).bind("mousemove", { that: camera }, camera.onMouseMove);
+    $(window).bind("blur", { that: camera }, camera.resetTranslation);
 
     function onWindowResize( event ) {
 
