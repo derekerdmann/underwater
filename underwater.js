@@ -22,7 +22,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
       container = document.createElement( 'div' );
       document.body.appendChild( container );
       
-      camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.001, 1000);
+      camera = new FirstPersonCamera(75, window.innerWidth/window.innerHeight, 0.001, 1000);
       camera.position.set( 0, 20, 99 );
 
       scene = new THREE.Scene();
