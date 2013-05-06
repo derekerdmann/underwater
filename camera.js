@@ -35,14 +35,14 @@ FirstPersonCamera.prototype = Object.create( THREE.PerspectiveCamera.prototype )
 
 /* Maps keys pressed to vectors that control how the camera moves */
 /* Move the camera when keys are pressed */
-FirstPersonCamera.prototype.onKeyDown = function(self) {
+FirstPersonCamera.prototype.onKeyDown = function(event) {
 
-  return function(event) {
-    if( event.keyCode in self.keyMapping ){
-      var vector = self.keyMapping[event.keyCode];
-      if( self.translation.indexOf(vector) < 0 ) {
-        self.translation.push(vector);
-      }
+  var self = event.data.that;
+
+  if( event.keyCode in self.keyMapping ){
+    var vector = self.keyMapping[event.keyCode];
+    if( self.translation.indexOf(vector) < 0 ) {
+      self.translation.push(vector);
     }
   }
 
@@ -50,15 +50,15 @@ FirstPersonCamera.prototype.onKeyDown = function(self) {
 
 
 /* Remove the mapped vector from the current translation */
-FirstPersonCamera.prototype.onKeyUp = function(self) {
+FirstPersonCamera.prototype.onKeyUp = function(event) {
 
-  return function(event) {
-    if( event.keyCode in self.keyMapping ){
-      var vector = self.keyMapping[event.keyCode];
-      var i = self.translation.indexOf(vector);
-      if( i > -1 ) {
-        self.translation.splice( i, 1 );
-      }
+  var self = event.data.that;
+
+  if( event.keyCode in self.keyMapping ){
+    var vector = self.keyMapping[event.keyCode];
+    var i = self.translation.indexOf(vector);
+    if( i > -1 ) {
+      self.translation.splice( i, 1 );
     }
   }
 

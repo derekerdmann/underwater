@@ -62,8 +62,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
       window.addEventListener( 'resize', onWindowResize, false );
     }
     
-    $(document).keydown(camera.onKeyDown(camera));
-    $(document).keyup(camera.onKeyUp(camera));
+    $(document).bind("keydown", { that: camera }, camera.onKeyDown);
+    $(document).bind("keyup", { that: camera }, camera.onKeyUp);
 
     jQuery(document).ready(function($){
       $(document).on('mousewheel', function(e){
