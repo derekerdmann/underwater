@@ -12,7 +12,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
     
     var array;
     var type;
-    
+	
 	var sub;
 	
 	var forwardV = new THREE.Vector3(0,0,1);
@@ -79,13 +79,12 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
       } );
       
       var jsonLoader = new THREE.JSONLoader();
-      jsonLoader.load( "titanic.js", function ( geometry, materials ) {
-        var material = new THREE.MeshFaceMaterial( materials );
+      jsonLoader.load( "titanic.js", function ( geometry) {
         titanic = new THREE.Mesh( geometry, underWaterMaterial );
         titanic.rotation.y = -Math.PI / 2;
         scene.add( titanic );
       });
-      
+	  
       renderer = new THREE.WebGLRenderer( { antialias: true } );
       renderer.setSize( window.innerWidth, window.innerHeight );
 
@@ -163,8 +162,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 			});
 	jQuery(document).ready(function($){
 		$(document).bind('mousewheel', function(e){
-			console.log(e.wheelDelta);
-			if(e.wheelDelta/120 > 0) {
+			console.log(e);
+			if(e.originalEvent.wheelDelta/120 > 0) {
 				cameraOffSet -= .5;
 			}
 			else{
@@ -175,13 +174,10 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
     function onWindowResize( event ) {
 
-      //uniforms.resolution.value.x = window.innerWidth;
-      //uniforms.resolution.value.y = window.innerHeight;
+		renderer.setSize( window.innerWidth, window.innerHeight );
 
-      renderer.setSize( window.innerWidth, window.innerHeight );
-
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
+		camera.aspect = window.innerWidth / window.innerHeight;
+		camera.updateProjectionMatrix();
 
     }
     
@@ -210,12 +206,12 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 				}
 				else if(backward){
 					//if(thrust>0){
-						thrust -=.005;
+						thrust -=.002;
 					//}
 				}
 				else if(forward){
 					if(thrust<maxThrust){
-						thrust +=.005;
+						thrust +=.002;
 					}
 				}
 				
@@ -257,8 +253,9 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 				velocity.multiplyScalar(0.98);
 				velocity.multiplyScalar(0.95);
 				thrust*=.90;
-      requestAnimationFrame( animate );
-      render();
+				
+		requestAnimationFrame( animate );
+		render();
     }
     function render() {
       renderer.render(scene, camera);
