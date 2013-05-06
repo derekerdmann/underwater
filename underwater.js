@@ -62,40 +62,9 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
       window.addEventListener( 'resize', onWindowResize, false );
     }
     
-    $(document).keydown(function(evt) {
-      
-      switch (evt.keyCode) 
-      {
-        case 87://w
-          //mesh.rotation.x -= .02;
-          camera.position.y += .5;
-          break;
-        case 65://a
-          titanic.rotation.y -= .02;
-          //camera.position.x -= .05;
-          break;
-        case 83://s
-          //mesh.rotation.x += .02;
-          camera.position.y -= .5;
-          break;
-        case 68://d
-          titanic.rotation.y += .02;
-          //camera.position.x += .05;
-          break;
-        case 73://d
-          camera.position.z -= .07;
-          break;
-        case 79://d
-          camera.position.z += .07;
-          break;
-        case 32://space
-          anim = !anim;
-          break;
-        default:
-          console.log(evt.keyCode);
-          break;
-      }
-    });
+    $(document).keydown(camera.onKeyDown(camera));
+    $(document).keyup(camera.onKeyUp(camera));
+
     jQuery(document).ready(function($){
       $(document).on('mousewheel', function(e){
         if(e.originalEvent.wheelDelta/120 > 0) {
@@ -123,6 +92,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
       if(anim){
         
       }
+      camera.updatePosition();
       requestAnimationFrame( animate );
       render();
     }
