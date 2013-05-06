@@ -74,3 +74,11 @@ FirstPersonCamera.prototype.updatePosition = function() {
   move.normalize();
   this.translateOnAxis( move, 0.5 );
 };
+
+
+/* Handle mouse events that rotate the camera */
+FirstPersonCamera.prototype.onMouseMove = function(event) {
+  var self = event.data.that;
+
+  
+}
