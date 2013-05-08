@@ -67,6 +67,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         
       });
       
+      // http://sketchup.google.com/3dwarehouse/details?mid=3541c327021e2a83281a820837f1b153&prevstart=84
       var jsonLoader = new THREE.JSONLoader();
       jsonLoader.load( "titanic.js", function ( geometry) {
         titanic = new THREE.Mesh( geometry, underWaterMaterial );
