@@ -8,6 +8,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
     
 
     var titanic;
+    var floor;
     
     
     var array;
@@ -43,6 +44,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 		document.body.appendChild( container );
 		  
 		camera = new FirstPersonCamera(75, window.innerWidth/window.innerHeight, 0.001, 1000);
+    camera.position.set( 0, 20, 99 );
 		camera.useQuaternion = true;
 
 		scene = new THREE.Scene();
@@ -53,14 +55,13 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 		
 		
 		sub = new THREE.Mesh( new THREE.SphereGeometry( 1,8,5 ), new THREE.MeshPhongMaterial( { color: 0xffffff } ));
-		sub.position.set( 0, 0, 0 );
+    sub.position.set( 0, 20, 99 );
 		sub.rotation.set(-1.57,0,0);
 		sub.useQuaternion = true;
 		sub.quaternion.setFromEuler(sub.rotation);
 		sub.rotationAutoUpdate = true;
 		scene.add( sub );
 	  
-      
       
       uniforms = {
 
@@ -71,12 +72,12 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
       };
       
-      underWaterMaterial = new THREE.ShaderMaterial( {
+      underWaterMaterial = new THREE.ShaderMaterial({
         uniforms: uniforms,
         vertexShader: document.getElementById( 'vertexShader' ).textContent,
         fragmentShader: document.getElementById( 'fragmentShader' ).textContent
         
-      } );
+      });
       
       var jsonLoader = new THREE.JSONLoader();
       jsonLoader.load( "titanic.js", function ( geometry) {
@@ -84,6 +85,11 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         titanic.rotation.y = -Math.PI / 2;
         scene.add( titanic );
       });
+      
+      floor = new THREE.Mesh( new THREE.PlaneGeometry( 500, 500, 500 ), underWaterMaterial);
+      floor.position.set( 0, 0, 0 );
+      floor.rotation.x = -Math.PI / 2;
+      scene.add( floor );
 	  
       renderer = new THREE.WebGLRenderer( { antialias: true } );
       renderer.setSize( window.innerWidth, window.innerHeight );

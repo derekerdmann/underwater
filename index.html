@@ -27,7 +27,7 @@
             float distanceFromSurface = surfaceLevel- vWorldPosition.y;
 			
 			float z = abs(distanceFromCamera);
-			float h = 0.02;//fog density
+			float h = 0.08;//fog density
 			float d = -1.0 * log(1.0-h);
 			float f = exp(-1.0*d*z);
             
