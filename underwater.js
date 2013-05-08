@@ -117,7 +117,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 					case 32://space
 						forward = true;
 						break;
-					case 17://ctrl
+					case 16://ctrl
 						backward = true;
 						break;
 					
@@ -151,7 +151,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 					case 32://space
 						forward = false;
 						break;
-					case 17://ctrl
+					case 16://ctrl
 						backward = false;
 						break;
 					
