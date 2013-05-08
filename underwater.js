@@ -21,7 +21,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 	var thrust = 0.0;
 	var rotVelocity = new THREE.Vector3(0,0,0);
 	var maxThrust = 5;
-	var cameraOffSet = 5;
+	var cameraOffSet = 2;
 	//input bools
 	var turnLeft = false;
 	var turnRight = false;
@@ -36,7 +36,6 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 	
     
     init();
-    animate();
   
     function init() {
     
@@ -54,15 +53,6 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 		  
 		
 		
-		sub = new THREE.Mesh( new THREE.SphereGeometry( 1,8,5 ), new THREE.MeshPhongMaterial( { color: 0xffffff } ));
-    sub.position.set( 0, 20, 99 );
-		sub.rotation.set(-1.57,0,0);
-		sub.useQuaternion = true;
-		sub.quaternion.setFromEuler(sub.rotation);
-		sub.rotationAutoUpdate = true;
-		scene.add( sub );
-	  
-      
       uniforms = {
         directionalLightColor: { type: "v3", value: new THREE.Vector3(sun.color.r,sun.color.g,sun.color.b) },
         directionalLightDirection: { type: "v3", value: sun.position },
@@ -88,6 +78,21 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
       floor.position.set( 0, 0, 0 );
       floor.rotation.x = -Math.PI / 2;
       scene.add( floor );
+
+      // http://www.3dvia.com/models/DFEF02D5E7F9CBDD/alvin-deep-submergence-vehicle-no-ocean-bottom
+      var subLoader = new THREE.JSONLoader();
+      subLoader.load( "alvin.js", function ( geometry, materials ) {
+        var material = new THREE.MeshFaceMaterial(materials)
+        sub = new THREE.Mesh( geometry, material );
+        sub.rotation.y = -Math.PI / 2;
+        sub.position.set( 0, 20, 99 );
+        sub.rotation.set(-1.57,0,0);
+        sub.useQuaternion = true;
+        sub.quaternion.setFromEuler(sub.rotation);
+        sub.rotationAutoUpdate = true;
+        scene.add( sub );
+        animate();
+      });
 	  
       renderer = new THREE.WebGLRenderer( { antialias: true } );
       renderer.setSize( window.innerWidth, window.innerHeight );
