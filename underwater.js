@@ -64,8 +64,6 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 	  
       
       uniforms = {
-
-        //tDisplacement: { type: "t", value: texture },
         directionalLightColor: { type: "v3", value: new THREE.Vector3(sun.color.r,sun.color.g,sun.color.b) },
         directionalLightDirection: { type: "v3", value: sun.position },
         cameraPosition: { type: "v3", value: camera.position },
