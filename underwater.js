@@ -2,7 +2,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
     
     var container;
 
-    var camera, scene, renderer;
+    var camera, scene, renderer, canvas;
     var uniforms, underWaterMaterial;
     var sun;
     
@@ -95,8 +95,12 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         animate();
       });
 	  
-      renderer = new THREE.WebGLRenderer( { antialias: true } );
-      renderer.setSize( window.innerWidth, window.innerHeight );
+      canvas = document.getElementById("c");
+      renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        canvas: canvas,
+      });
+	    renderer.setSize( canvas.clientWidth, canvas.clientHeight );
 
       container.appendChild( renderer.domElement );
       window.addEventListener( 'resize', onWindowResize, false );
@@ -184,7 +188,9 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
     function onWindowResize( event ) {
 
-		renderer.setSize( window.innerWidth, window.innerHeight );
+	    renderer.setSize( canvas.clientWidth, canvas.clientHeight );
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
 
 		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
