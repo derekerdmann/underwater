@@ -4,6 +4,7 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
     var camera, scene, renderer, canvas;
     var uniforms, underWaterMaterial;
+	var spotlight;
     var sun;
     
 
@@ -33,32 +34,45 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 	var backward = false;
 	var debugTimer = 60;
 	var debugCount = 60;
+	var debug =true;
+	
+	var forwardV;
 	
     
     init();
   
     function init() {
-    
+		
 		container = document.createElement( 'div' );
 		document.body.appendChild( container );
 		  
 		camera = new FirstPersonCamera(75, window.innerWidth/window.innerHeight, 0.001, 1000);
-    camera.position.set( 0, 20, 99 );
+		camera.position.set( 0, 20, 99 );
 		camera.useQuaternion = true;
 
 		scene = new THREE.Scene();
-		sun = new THREE.DirectionalLight(0xffffff);
+		sun = new THREE.DirectionalLight(0x222222);
 		sun.position.set(2,2,2);
 		scene.add( sun );
-		  
+		
+		spotlight = new THREE.SpotLight(0xffffff,1,25,30,3);
+		spotlight.position.set( 0, 20, 99 );
+		scene.add( spotlight );
+		
+		forwardV = new THREE.Vector3(0,-1,-0.25);
 		
 		
-      uniforms = {
-        directionalLightColor: { type: "v3", value: new THREE.Vector3(sun.color.r,sun.color.g,sun.color.b) },
-        directionalLightDirection: { type: "v3", value: sun.position },
-        cameraPosition: { type: "v3", value: camera.position },
-
-      };
+		uniforms = {
+			directionalLightColor: { type: "v3", value: new THREE.Vector3(sun.color.r,sun.color.g,sun.color.b) },
+			directionalLightDirection: { type: "v3", value: sun.position },
+			cameraPosition: { type: "v3", value: camera.position },
+			
+			spotLightPosition: { type: "v3", value: spotlight.position },
+			spotLightDirection: { type: "v3", value: forwardV },
+			spotLightColor: { type: "v3", value: new THREE.Vector3(spotlight.color.r,spotlight.color.g,spotlight.color.b) },
+			spotLightDistance: { type: "f", value: spotlight.distance},
+			spotLightAngle: { type: "f", value: spotlight.angle},
+		};
       
       underWaterMaterial = new THREE.ShaderMaterial({
         uniforms: uniforms,
@@ -66,6 +80,9 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         fragmentShader: document.getElementById( 'fragmentShader' ).textContent
         
       });
+	  
+	 // underWaterMaterial.lights = true;
+	  
       
       // http://sketchup.google.com/3dwarehouse/details?mid=3541c327021e2a83281a820837f1b153&prevstart=84
       var jsonLoader = new THREE.JSONLoader();
@@ -73,7 +90,9 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         titanic = new THREE.Mesh( geometry, underWaterMaterial );
         titanic.rotation.y = -Math.PI / 2;
         scene.add( titanic );
+		
       });
+	  
       
       floor = new THREE.Mesh( new THREE.PlaneGeometry( 500, 500, 500 ), underWaterMaterial);
       floor.position.set( 0, 0, 0 );
@@ -94,6 +113,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
         scene.add( sub );
         animate();
       });
+	  
+	  
 	  
       canvas = document.getElementById("c");
       renderer = new THREE.WebGLRenderer({
@@ -189,8 +210,8 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
     function onWindowResize( event ) {
 
 	    renderer.setSize( canvas.clientWidth, canvas.clientHeight );
-      canvas.width = canvas.clientWidth;
-      canvas.height = canvas.clientHeight;
+		canvas.width = canvas.clientWidth;
+		canvas.height = canvas.clientHeight;
 
 		camera.aspect = window.innerWidth / window.innerHeight;
 		camera.updateProjectionMatrix();
@@ -198,6 +219,33 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
     }
     
     function animate() {
+		
+		var mat = new THREE.Matrix4();
+		mat.extractRotation(sub.matrix);
+		
+		forwardV = (new THREE.Vector3(0,1,-0.5)).applyMatrix4(mat).normalize();
+		
+		
+		uniforms = {
+			directionalLightColor: { type: "v3", value: new THREE.Vector3(sun.color.r,sun.color.g,sun.color.b) },
+			directionalLightDirection: { type: "v3", value: sun.position },
+			cameraPosition: { type: "v3", value: camera.position },
+			
+			spotLightPosition: { type: "v3", value: spotlight.position },
+			spotLightDirection: { type: "v3", value: forwardV },
+			spotLightColor: { type: "v3", value: new THREE.Vector3(spotlight.color.r,spotlight.color.g,spotlight.color.b) },
+			spotLightDistance: { type: "f", value: spotlight.distance},
+			spotLightAngle: { type: "f", value: spotlight.angle},
+		};
+		underWaterMaterial = new THREE.ShaderMaterial({
+			uniforms: uniforms,
+			vertexShader: document.getElementById( 'vertexShader' ).textContent,
+			fragmentShader: document.getElementById( 'fragmentShader' ).textContent
+			
+		});
+		
+		titanic.material = underWaterMaterial;
+		
 				if(turnLeft){
 					rotVelocity.z += .001;
 				}
@@ -247,15 +295,13 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 				mat.extractRotation(sub.matrix);
 				
 			
-				var forwardV = (new THREE.Vector3(0,1,0)).applyMatrix4(mat).normalize();
-				
-			
-				
+				forwardV = (new THREE.Vector3(0,1,0)).applyMatrix4(mat).normalize();
 				
 				velocity.add(forwardV.clone().multiplyScalar(thrust));
 				
 				sub.position.add(velocity);
 				
+				spotlight.position = sub.position;
 				
 				camera.position.subVectors( sub.position , forwardV.clone().multiplyScalar(cameraOffSet));
 				camera.position.add(new THREE.Vector3(0,cameraOffSet/5,0));
