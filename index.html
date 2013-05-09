@@ -10,20 +10,71 @@
     <canvas id="c"></canvas>
 
 	<script id="fragmentShader" type="x-shader/x-fragment">
-
+		#define PI 3.14159265
         uniform vec3 directionalLightColor;
         uniform vec3 directionalLightDirection;
+		
+		uniform vec3 spotLightColor;
+		uniform vec3 spotLightPosition;
+		uniform vec3 spotLightDirection;
+		
+		uniform float spotLightDistance;
+		uniform float spotLightAngle;
         
         uniform float surfaceLevel;
         
         varying vec3 vWorldPosition;
         varying vec3 vViewPosition;
         varying vec3 vNormal;
+		
+		float spotIlluminate ( vec3 P, vec3 from, vec3 dir, float angle ,float distance)
+		{
+			vec3 V = P-from;
+			
+			float d = distance-length(V);
+			
+			float distanceAtten;
+			
+			if(d < distance){
+				distanceAtten = d/distance;
+			}
+			else{
+				distanceAtten = 0.0;
+			}
+			
+
+			float focus = 0.0;
+
+			float beamAngle = angle / 2.0;
+			float fieldAngle = angle - (focus*(angle-beamAngle));
+			
+
+			float fieldRad = fieldAngle * (PI/180.0);
+			float beamRad = beamAngle * (PI/180.0);
+
+			float cosField= cos(fieldRad);
+			float cosBeam = cos(beamRad);
+
+			float cosAngle = dot ( normalize(V), normalize(dir) );
+
+			if ( cosAngle > cosBeam )
+			{
+				return (smoothstep(cosBeam,1.0,cosAngle)*.5 + .5)* distanceAtten;
+			}
+			else if ( cosAngle > cosField )
+			{
+				return (smoothstep(cosField,cosBeam,cosAngle)*.4 + .1)* distanceAtten;
+			}
+			else
+			{
+				return 0.0;
+			}
+		}
         
         void main( void ) {
             
-            vec3 diffuse;
-            vec3 specular;
+            vec3 diffuse = vec3(0,0,0);
+            vec3 specular = vec3(0,0,0);
             
             float distanceFromCamera = length(cameraPosition - vWorldPosition);
             float distanceFromSurface = surfaceLevel- vWorldPosition.y;
@@ -37,6 +88,8 @@
             
             vec4 lDirection = viewMatrix * vec4( directionalLightDirection, 0.0 );
             vec3 dirVector = normalize( lDirection.xyz );
+			
+			float spotWeight = spotIlluminate(vWorldPosition,spotLightPosition,spotLightDirection,spotLightAngle,spotLightDistance);
             
             float dirDiffuseWeight = max( dot( vNormal, dirVector ), 0.0 );
             
@@ -47,19 +100,21 @@
             vec3 ambientLight= vec3(0.01,0.01,0.01);
             float uShininess = 2.0;
             
-            
-            diffuse = directionalLightColor* uDiffuseColor * dirDiffuseWeight;
+            diffuse += directionalLightColor* uDiffuseColor * dirDiffuseWeight;
+			diffuse += spotLightColor * uDiffuseColor * dirDiffuseWeight * spotWeight;
                 
             vec3 dirHalfVector = normalize( dirVector + vViewPosition );
             float dirDotNormalHalf = max( dot( vNormal, dirHalfVector ), 0.0 );
             float dirSpecularWeight = max( pow( dirDotNormalHalf, uShininess ), 0.0 );
                 
-            specular = directionalLightColor* uSpecularColor * dirSpecularWeight * dirDiffuseWeight;
+            specular += directionalLightColor* uSpecularColor * dirSpecularWeight;
+			specular += spotLightColor* uSpecularColor * dirSpecularWeight * spotWeight;
 			
             vec3 color = ambientLight + diffuse + specular;
             color = f*color + waterColor*(1.0-f);
             
-            gl_FragColor =  vec4(color,1.0);
+            gl_FragColor = vec4(color,1.0);
+			//gl_FragColor = vec4(abs(spotLightDirection.x),abs(spotLightDirection.y),abs(spotLightDirection.z),1.0);
         }
 
     </script>
