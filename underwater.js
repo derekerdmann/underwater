@@ -10,6 +10,11 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
     var titanic;
     var floor;
+	var wall1;
+	var wall2;
+	var wall3;
+	var wall4;
+	var ceiling;
     
     
     var array;
@@ -98,6 +103,30 @@ if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
       floor.position.set( 0, 0, 0 );
       floor.rotation.x = -Math.PI / 2;
       scene.add( floor );
+	  
+	  wall1= new THREE.Mesh( new THREE.PlaneGeometry( 500, 500, 500 ), underWaterMaterial);
+      wall1.position.set( 0, 250, -250 );
+	  scene.add( wall1 );
+	  
+	  wall2= new THREE.Mesh( new THREE.PlaneGeometry( 500, 500, 500 ), underWaterMaterial);
+      wall2.position.set( 0, 250, 250 );
+	  wall2.rotation.y = -Math.PI;
+	  scene.add( wall2 );
+	 
+	  wall3= new THREE.Mesh( new THREE.PlaneGeometry( 500, 500, 500 ), underWaterMaterial);
+      wall3.position.set( 250, 250, 0 );
+	  wall3.rotation.y = -Math.PI/2;
+	  scene.add( wall3 );
+	  
+	  wall4= new THREE.Mesh( new THREE.PlaneGeometry( 500, 500, 500 ), underWaterMaterial);
+      wall4.position.set( -250, 250, 0 );
+	  wall4.rotation.y = Math.PI/2;
+	  scene.add( wall4 );
+	  
+	  ceiling= new THREE.Mesh( new THREE.PlaneGeometry( 500, 500, 500 ), underWaterMaterial);
+      ceiling.position.set( 0, 500, 0 );
+	  ceiling.rotation.x = Math.PI / 2;
+	  scene.add( ceiling );
 
       // http://www.3dvia.com/models/DFEF02D5E7F9CBDD/alvin-deep-submergence-vehicle-no-ocean-bottom
       var subLoader = new THREE.JSONLoader();
